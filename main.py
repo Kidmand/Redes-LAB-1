@@ -58,7 +58,7 @@ def eliminar_pelicula(id):
             return jsonify({'mensaje': 'Película eliminada correctamente'})
     return jsonify({'error': 'Película no encontrada'}), 404
 
-
+#FIXME: Esta funcion devuelve solo una pelicula del genero, la primera que encuantra.
 def obtener_peliculas_por_genero(genero):
     # Lógica para devolver el listado de películas de un género específico
     peliculas_genero = []
@@ -69,6 +69,19 @@ def obtener_peliculas_por_genero(genero):
         return jsonify(peliculas_genero)
     else:
         return jsonify({'error': 'Genero no encontrado'}), 404
+
+#FIXME: Esta funcion ni siquiera se ejecuta!!
+def obtener_peliculas_str(string):
+    # Lógica para devolver el listado de películas que tengan determinado string en el título.
+    return jsonify({'mensaje': 'Anduvo!, ahora borra esta linea de codigo'})
+    peliculas_str = []
+    for p in peliculas:
+        if string in p['titulo']:
+            peliculas_str.append(p)
+    if len(peliculas_str) > 0:
+        return jsonify(peliculas_str)
+    else:
+        return jsonify({'error': 'String no encontrado'}), 404
 
 
 def obtener_nuevo_id():
@@ -91,6 +104,8 @@ app.add_url_rule('/peliculas/<int:id>', 'eliminar_pelicula',
                  eliminar_pelicula, methods=['DELETE'])
 app.add_url_rule('/peliculas/genero/<genero>', 'obtener_peliculas_por_genero',
                  obtener_peliculas_por_genero, methods=['GET'])
+app.add_url_rule('/peliculas/string/<string>', 'obtener_peliculas_str',
+                 obtener_peliculas_str, methods=['GET'])
 
 if __name__ == '__main__':
     app.run()
