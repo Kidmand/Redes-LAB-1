@@ -1,0 +1,9 @@
+# Agregar/Crear una película:
+
+POST http://127.0.0.1:5000/peliculas
+Content-Type: application/json
+
+{
+    "titulo": "El Padrino",
+    "genero": "Drama",
+}
