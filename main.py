@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import random
 
 app = Flask(__name__)
 peliculas = [
@@ -16,6 +17,13 @@ peliculas = [
     {'id': 12, 'titulo': 'Fight Club', 'genero': 'Drama'}
 ]
 
+"""
+Codigos de estado HTTP:
+- 200: 
+- 201:
+- 204:
+- 404:
+"""
 
 def obtener_peliculas():
     return jsonify(peliculas)
@@ -23,7 +31,10 @@ def obtener_peliculas():
 
 def obtener_pelicula(id):
     # Lógica para buscar la película por su ID y devolver sus detalles
-    return jsonify(pelicula_encontrada)
+    for p in peliculas:
+        if p['id'] == id:
+            return jsonify(p), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID.'}), 404
 
 
 def agregar_pelicula():
@@ -39,12 +50,65 @@ def agregar_pelicula():
 
 def actualizar_pelicula(id):
     # Lógica para buscar la película por su ID y actualizar sus detalles
-    return jsonify(pelicula_actualizada)
+    for i in range(len(peliculas)):
+        if peliculas[i]['id'] == id:
+            peliculas[i]['titulo'] = request.json['titulo']
+            peliculas[i]['genero'] = request.json['genero']
+            return jsonify(peliculas[i]), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID para actualizarla.'}), 404
 
 
 def eliminar_pelicula(id):
     # Lógica para buscar la película por su ID y eliminarla
-    return jsonify({'mensaje': 'Película eliminada correctamente'})
+    for p in peliculas:
+        if p['id'] == id:
+            del p
+            return jsonify({'mensaje': 'Película eliminada correctamente'}), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID para eliminarla.'}), 404
+
+
+def obtener_peliculas_por_genero(genero):
+    # Lógica para devolver el listado de películas de un género específico
+    peliculas_genero = []
+    for p in peliculas:
+        if p['genero'] == genero:
+            peliculas_genero.append(p)
+    if peliculas_genero:
+        return jsonify(peliculas_genero), 200
+    else:
+        return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
+
+
+def obtener_peliculas_entitulo(texto):
+    # Lógica para devolver el listado de películas que tengan determinado string en el título.
+    peliculas_str = []
+    for p in peliculas:
+        if texto in p['titulo']:
+            peliculas_str.append(p)
+    if peliculas_str:
+        return jsonify(peliculas_str), 200
+    else:
+        return jsonify({'mensaje': 'Texto no encontrado en ningun titulo.'}), 404
+
+
+def random_pelicula():
+    # Lógica para devolver/sugerir una película aleatoria.
+    if len(peliculas) == 0:
+        return jsonify({'mensaje': 'No hay peliculas.'}), 404
+    return jsonify(random.choice(peliculas)), 200
+
+
+def pelicula_random_por_genero(genero):
+    # Lógica para devolver/sugerir una película aleatoria según género.
+    peliculas_genero = []
+    for p in peliculas:
+        if p['genero'] == genero:
+            peliculas_genero.append(p)
+    if peliculas_genero:
+        return jsonify(random.choice(peliculas_genero)), 200
+    else:
+        return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
+        
 
 
 def obtener_nuevo_id():
@@ -55,11 +119,50 @@ def obtener_nuevo_id():
         return 1
 
 
-app.add_url_rule('/peliculas', 'obtener_peliculas', obtener_peliculas, methods=['GET'])
-app.add_url_rule('/peliculas/<int:id>', 'obtener_pelicula', obtener_pelicula, methods=['GET'])
-app.add_url_rule('/peliculas', 'agregar_pelicula', agregar_pelicula, methods=['POST'])
-app.add_url_rule('/peliculas/<int:id>', 'actualizar_pelicula', actualizar_pelicula, methods=['PUT'])
-app.add_url_rule('/peliculas/<int:id>', 'eliminar_pelicula', eliminar_pelicula, methods=['DELETE'])
+app.add_url_rule('/peliculas',
+                 'obtener_peliculas',
+                 obtener_peliculas, 
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/<int:id>',
+                 'obtener_pelicula',
+                 obtener_pelicula, 
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas',
+                 'agregar_pelicula',
+                 agregar_pelicula,
+                 methods=['POST'])
+
+app.add_url_rule('/peliculas/<int:id>',
+                 'actualizar_pelicula',
+                 actualizar_pelicula, 
+                 methods=['PUT'])
+
+app.add_url_rule('/peliculas/<int:id>', 
+                 'eliminar_pelicula',
+                 eliminar_pelicula, 
+                 methods=['DELETE'])
+
+app.add_url_rule('/peliculas/genero/<string:genero>',
+                 'obtener_peliculas_por_genero',
+                 obtener_peliculas_por_genero,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/entitulo/<string:texto>',
+                 'obtener_peliculas_entitulo',
+                 obtener_peliculas_entitulo,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/random',
+                 'random_pelicula',
+                 random_pelicula,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/random/<string:genero>',
+                 'pelicula_random_por_genero',
+                 pelicula_random_por_genero,
+                 methods=['GET'])
 
 if __name__ == '__main__':
     app.run()

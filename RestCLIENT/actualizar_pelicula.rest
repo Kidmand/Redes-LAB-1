@@ -1,0 +1,11 @@
+# Actualizar una película por id:
+
+PUT http://127.0.0.1:5000/peliculas/1
+Content-Type: application/json
+
+{
+    "titulo": "Los Pitufos",
+    "genero": "Infantil"
+}
+
+## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.
