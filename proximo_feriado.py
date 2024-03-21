@@ -2,12 +2,14 @@ import requests
 from datetime import date
 
 def get_url(year):
+    """ devuelve la URL correspondiente a la API para obtener los feriados del año "year". """
     return f"https://nolaborables.com.ar/api/v2/feriados/{year}"
 
 months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 
 def day_of_week(day, month, year):
+    """devuelve el día de la semana correspondiente a la fecha "day"/"month"/"year"."""
     return days[date(year, month, day).weekday()]
 
 class NextHoliday:
@@ -17,6 +19,7 @@ class NextHoliday:
         self.holiday = None
 
     def set_next(self, holidays):
+        """ Establece el próximo feriado."""
         now = date.today()
         today = {
             'day': now.day,
@@ -32,11 +35,13 @@ class NextHoliday:
         self.holiday = holiday
 
     def fetch_holidays(self):
+        """ Realiza la solicitud HTTP a la API para obtener los feriados del año actual."""
         response = requests.get(get_url(self.year))
         data = response.json()
         self.set_next(data)
 
     def render(self):
+        """ Imprime la información sobre el próximo feriado. """
         if self.loading:
             print("Buscando...")
         else:
