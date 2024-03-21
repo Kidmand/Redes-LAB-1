@@ -7,3 +7,5 @@ Content-Type: application/json
     "titulo": "El Padrino",
     "genero": "Drama"
 }
+
+## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.

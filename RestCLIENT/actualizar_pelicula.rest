@@ -7,3 +7,5 @@ Content-Type: application/json
     "titulo": "Los Pitufos",
     "genero": "Infantil"
 }
+
+## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.
