@@ -1,5 +1,5 @@
 # Obtener una película por su id:
 
-GET http://127.0.0.1:5000/peliculas/random/Dramaasdas
+GET http://127.0.0.1:5000/peliculas/random/Drama
 
 ## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.
