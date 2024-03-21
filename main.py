@@ -26,7 +26,7 @@ def obtener_pelicula(id):
     for p in peliculas:
         if p['id'] == id:
             return jsonify(p)
-    return jsonify({'error': 'Película no encontrada'}), 404        
+    return jsonify({'error': 'Película no encontrada'}), 404
 
 
 def agregar_pelicula():
@@ -46,7 +46,7 @@ def actualizar_pelicula(id):
         if peliculas[i]['id'] == id:
             peliculas[i]['titulo'] = request.json['titulo']
             peliculas[i]['genero'] = request.json['genero']
-            return jsonify(peliculas[i]) 
+            return jsonify(peliculas[i])
     return jsonify({'error': 'Película no encontrada'}), 404
 
 
@@ -59,6 +59,18 @@ def eliminar_pelicula(id):
     return jsonify({'error': 'Película no encontrada'}), 404
 
 
+def obtener_peliculas_por_genero(genero):
+    # Lógica para devolver el listado de películas de un género específico
+    peliculas_genero = []
+    for p in peliculas:
+        if p['genero'] == genero:
+            peliculas_genero.append(p)
+    if len(peliculas_genero) > 0:
+        return jsonify(peliculas_genero)
+    else:
+        return jsonify({'error': 'Genero no encontrado'}), 404
+
+
 def obtener_nuevo_id():
     if len(peliculas) > 0:
         ultimo_id = peliculas[-1]['id']
@@ -67,11 +79,18 @@ def obtener_nuevo_id():
         return 1
 
 
-app.add_url_rule('/peliculas', 'obtener_peliculas', obtener_peliculas, methods=['GET'])
-app.add_url_rule('/peliculas/<int:id>', 'obtener_pelicula', obtener_pelicula, methods=['GET'])
-app.add_url_rule('/peliculas', 'agregar_pelicula', agregar_pelicula, methods=['POST'])
-app.add_url_rule('/peliculas/<int:id>', 'actualizar_pelicula', actualizar_pelicula, methods=['PUT'])
-app.add_url_rule('/peliculas/<int:id>', 'eliminar_pelicula', eliminar_pelicula, methods=['DELETE'])
+app.add_url_rule('/peliculas', 'obtener_peliculas',
+                 obtener_peliculas, methods=['GET'])
+app.add_url_rule('/peliculas/<int:id>', 'obtener_pelicula',
+                 obtener_pelicula, methods=['GET'])
+app.add_url_rule('/peliculas', 'agregar_pelicula',
+                 agregar_pelicula, methods=['POST'])
+app.add_url_rule('/peliculas/<int:id>', 'actualizar_pelicula',
+                 actualizar_pelicula, methods=['PUT'])
+app.add_url_rule('/peliculas/<int:id>', 'eliminar_pelicula',
+                 eliminar_pelicula, methods=['DELETE'])
+app.add_url_rule('/peliculas/genero/<genero>', 'obtener_peliculas_por_genero',
+                 obtener_peliculas_por_genero, methods=['GET'])
 
 if __name__ == '__main__':
     app.run()
