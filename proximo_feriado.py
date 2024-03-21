@@ -2,14 +2,14 @@ import requests
 from datetime import date
 
 def get_url(year):
-    """ devuelve la URL correspondiente a la API para obtener los feriados del año "year". """
+    """ Devuelve la URL correspondiente a la API para obtener los feriados del año 'year'. """
     return f"https://nolaborables.com.ar/api/v2/feriados/{year}"
 
 months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 
 def day_of_week(day, month, year):
-    """devuelve el día de la semana correspondiente a la fecha "day"/"month"/"year"."""
+    """ Devuelve el día de la semana correspondiente a la fecha 'day'/'month'/'year'."""
     return days[date(year, month, day).weekday()]
 
 class NextHoliday:
