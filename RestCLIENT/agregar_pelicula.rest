@@ -5,5 +5,5 @@ Content-Type: application/json
 
 {
     "titulo": "El Padrino",
-    "genero": "Drama",
+    "genero": "Drama"
 }

@@ -5,5 +5,5 @@ Content-Type: application/json
 
 {
     "titulo": "Los Pitufos",
-    "genero": "Infantil",
+    "genero": "Infantil"
 }
