@@ -17,6 +17,13 @@ peliculas = [
     {'id': 12, 'titulo': 'Fight Club', 'genero': 'Drama'}
 ]
 
+"""
+Codigos de estado HTTP:
+- 200: 
+- 201:
+- 204:
+- 404:
+"""
 
 def obtener_peliculas():
     return jsonify(peliculas)
@@ -26,8 +33,8 @@ def obtener_pelicula(id):
     # Lógica para buscar la película por su ID y devolver sus detalles
     for p in peliculas:
         if p['id'] == id:
-            return jsonify(p)
-    return jsonify({'error': 'Película no encontrada'}), 404
+            return jsonify(p), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID.'}), 404
 
 
 def agregar_pelicula():
@@ -47,8 +54,8 @@ def actualizar_pelicula(id):
         if peliculas[i]['id'] == id:
             peliculas[i]['titulo'] = request.json['titulo']
             peliculas[i]['genero'] = request.json['genero']
-            return jsonify(peliculas[i])
-    return jsonify({'error': 'Película no encontrada'}), 404
+            return jsonify(peliculas[i]), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID para actualizarla.'}), 404
 
 
 def eliminar_pelicula(id):
@@ -56,8 +63,8 @@ def eliminar_pelicula(id):
     for p in peliculas:
         if p['id'] == id:
             del p
-            return jsonify({'mensaje': 'Película eliminada correctamente'})
-    return jsonify({'error': 'Película no encontrada'}), 404
+            return jsonify({'mensaje': 'Película eliminada correctamente'}), 200
+    return jsonify({'mensaje': 'Película no encontrada por el ID para eliminarla.'}), 404
 
 
 def obtener_peliculas_por_genero(genero):
@@ -66,10 +73,10 @@ def obtener_peliculas_por_genero(genero):
     for p in peliculas:
         if p['genero'] == genero:
             peliculas_genero.append(p)
-    if len(peliculas_genero) > 0:
-        return jsonify(peliculas_genero)
+    if peliculas_genero:
+        return jsonify(peliculas_genero), 200
     else:
-        return jsonify({'error': 'Genero no encontrado'}), 404
+        return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
 
 
 def obtener_peliculas_entitulo(texto):
@@ -78,23 +85,30 @@ def obtener_peliculas_entitulo(texto):
     for p in peliculas:
         if texto in p['titulo']:
             peliculas_str.append(p)
-    if len(peliculas_str) > 0:
-        return jsonify(peliculas_str)
+    if peliculas_str:
+        return jsonify(peliculas_str), 200
     else:
-        return jsonify({'error': 'String no encontrado'}), 404
+        return jsonify({'mensaje': 'Texto no encontrado en ningun titulo.'}), 404
 
 
 def random_pelicula():
-    # Funcionalidad de sugerir una película aleatoria.
-    return jsonify(random.choice(peliculas))
+    # Lógica para devolver/sugerir una película aleatoria.
+    if len(peliculas) == 0:
+        return jsonify({'mensaje': 'No hay peliculas.'}), 404
+    return jsonify(random.choice(peliculas)), 200
+
 
 def pelicula_random_por_genero(genero):
-    # Funcionalidad de sugerir una película aleatoria según género.
+    # Lógica para devolver/sugerir una película aleatoria según género.
     peliculas_genero = []
     for p in peliculas:
         if p['genero'] == genero:
             peliculas_genero.append(p)
-    return jsonify(random.choice(peliculas_genero))
+    if peliculas_genero:
+        return jsonify(random.choice(peliculas_genero)), 200
+    else:
+        return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
+        
 
 
 def obtener_nuevo_id():
