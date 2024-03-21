@@ -1,6 +1,7 @@
 {
-    "recommendations": [
-        "humao.rest-client",
-        "wayou.vscode-todo-highlight"
-    ]
+  "recommendations": [
+    "humao.rest-client",
+    "wayou.vscode-todo-highlight",
+    "ms-python.autopep8"
+  ]
 }
