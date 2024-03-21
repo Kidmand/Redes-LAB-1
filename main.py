@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import random
 
 app = Flask(__name__)
 peliculas = [
@@ -58,7 +59,7 @@ def eliminar_pelicula(id):
             return jsonify({'mensaje': 'Película eliminada correctamente'})
     return jsonify({'error': 'Película no encontrada'}), 404
 
-#FIXME: Esta funcion devuelve solo una pelicula del genero, la primera que encuantra.
+
 def obtener_peliculas_por_genero(genero):
     # Lógica para devolver el listado de películas de un género específico
     peliculas_genero = []
@@ -70,18 +71,30 @@ def obtener_peliculas_por_genero(genero):
     else:
         return jsonify({'error': 'Genero no encontrado'}), 404
 
-#FIXME: Esta funcion ni siquiera se ejecuta!!
-def obtener_peliculas_str(string):
+
+def obtener_peliculas_entitulo(texto):
     # Lógica para devolver el listado de películas que tengan determinado string en el título.
-    return jsonify({'mensaje': 'Anduvo!, ahora borra esta linea de codigo'})
     peliculas_str = []
     for p in peliculas:
-        if string in p['titulo']:
+        if texto in p['titulo']:
             peliculas_str.append(p)
     if len(peliculas_str) > 0:
         return jsonify(peliculas_str)
     else:
         return jsonify({'error': 'String no encontrado'}), 404
+
+
+def random_pelicula():
+    # Funcionalidad de sugerir una película aleatoria.
+    return jsonify(random.choice(peliculas))
+
+def pelicula_random_por_genero(genero):
+    # Funcionalidad de sugerir una película aleatoria según género.
+    peliculas_genero = []
+    for p in peliculas:
+        if p['genero'] == genero:
+            peliculas_genero.append(p)
+    return jsonify(random.choice(peliculas_genero))
 
 
 def obtener_nuevo_id():
@@ -92,20 +105,50 @@ def obtener_nuevo_id():
         return 1
 
 
-app.add_url_rule('/peliculas', 'obtener_peliculas',
-                 obtener_peliculas, methods=['GET'])
-app.add_url_rule('/peliculas/<int:id>', 'obtener_pelicula',
-                 obtener_pelicula, methods=['GET'])
-app.add_url_rule('/peliculas', 'agregar_pelicula',
-                 agregar_pelicula, methods=['POST'])
-app.add_url_rule('/peliculas/<int:id>', 'actualizar_pelicula',
-                 actualizar_pelicula, methods=['PUT'])
-app.add_url_rule('/peliculas/<int:id>', 'eliminar_pelicula',
-                 eliminar_pelicula, methods=['DELETE'])
-app.add_url_rule('/peliculas/genero/<genero>', 'obtener_peliculas_por_genero',
-                 obtener_peliculas_por_genero, methods=['GET'])
-app.add_url_rule('/peliculas/string/<string>', 'obtener_peliculas_str',
-                 obtener_peliculas_str, methods=['GET'])
+app.add_url_rule('/peliculas',
+                 'obtener_peliculas',
+                 obtener_peliculas, 
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/<int:id>',
+                 'obtener_pelicula',
+                 obtener_pelicula, 
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas',
+                 'agregar_pelicula',
+                 agregar_pelicula,
+                 methods=['POST'])
+
+app.add_url_rule('/peliculas/<int:id>',
+                 'actualizar_pelicula',
+                 actualizar_pelicula, 
+                 methods=['PUT'])
+
+app.add_url_rule('/peliculas/<int:id>', 
+                 'eliminar_pelicula',
+                 eliminar_pelicula, 
+                 methods=['DELETE'])
+
+app.add_url_rule('/peliculas/genero/<string:genero>',
+                 'obtener_peliculas_por_genero',
+                 obtener_peliculas_por_genero,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/entitulo/<string:texto>',
+                 'obtener_peliculas_entitulo',
+                 obtener_peliculas_entitulo,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/random',
+                 'random_pelicula',
+                 random_pelicula,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/random/<string:genero>',
+                 'pelicula_random_por_genero',
+                 pelicula_random_por_genero,
+                 methods=['GET'])
 
 if __name__ == '__main__':
     app.run()
