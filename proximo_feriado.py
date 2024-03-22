@@ -11,6 +11,7 @@ months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 days = ['Lunes', 'Martes', 'Miércoles',
         'Jueves', 'Viernes', 'Sábado', 'Domingo']
+tipos = ['inamovible', 'trasladable', 'nolaborable', 'puente']
 
 
 def day_of_week(day, month, year):
@@ -24,7 +25,7 @@ class NextHoliday:
         self.year = date.today().year
         self.holiday = None
 
-    def set_next(self, holidays):
+    def set_next(self, holidays, tipo=None):
         """ Establece el próximo feriado."""
         now = date.today()
         today = {
@@ -32,21 +33,54 @@ class NextHoliday:
             'month': now.month
         }
 
-        holiday = next(
-            (h for h in holidays if h['mes'] == today['month']
-             and h['dia'] > today['day'] or h['mes'] > today['month']),
-            holidays[0]
-        )
+        if tipo:
+            print("Tipo: ", tipo)
+            holiday = next(
+                (h for h in holidays
+                 if (h['tipo'] == tipo) and (
+                     (h['mes'] == today['month'] and h['dia'] > today['day'])
+                     or (h['mes'] > today['month'])
+                 )),
+                # FIXME: Segun lo que digan los profes, cambiar esto por [].
+                holidays[0]
+            )
+        else:
+            holiday = next(
+                (h for h in holidays
+                 if (h['mes'] == today['month'] and h['dia'] > today['day']) or h['mes'] > today['month']),
+                # FIXME: Segun lo que digan los profes, cambiar esto por [].
+                holidays[0]
+            )
 
         self.holiday = holiday
+
+    # Metodos de fetch de feriados.
+
+    def fetch_all_holidays(self):
+        response = requests.get(get_url(self.year))
+        return response.json()
 
     def fetch_holidays(self):
         """ Realiza la solicitud HTTP a la API para obtener los feriados del año actual."""
         self.loading = True
-        response = requests.get(get_url(self.year))
-        data = response.json()
+        data = self.fetch_all_holidays()
         self.set_next(data)
         self.loading = False
+
+    def fetch_holidays_del_tipo(self, tipo):
+        """ Realiza la solicitud HTTP a la API para obtener los feriados 'tipo' del año actual."""
+        self.loading = True
+        data = self.fetch_all_holidays()
+        if tipo not in tipos:
+            print("Tipo de feriado inválido.")
+            # FIXME: Segun lo que digan los profes, cambiar esto por [].
+            self.holiday = data[0]
+            self.loading = False
+            return
+        self.set_next(data, tipo)
+        self.loading = False
+
+    # Metodos de impresión de la información del próximo feriado.
 
     def render(self):
         """ Imprime la información sobre el próximo feriado. """
@@ -63,41 +97,22 @@ class NextHoliday:
             print("Tipo:")
             print(self.holiday['tipo'])
 
-    # ----------------------------------------------------------------
-    def proximo_feriado_del_tipo(self, type):
-        """ Devuelve el próximo feriado 'tipo'."""
-        return self.holiday[type]
 
-    def fetch_holidays_del_tipo(self, type):
-        """ Realiza la solicitud HTTP a la API para obtener los feriados 'tipo' del año actual."""
-        self.loading = True
-        response = requests.get(get_url(self.year))
-        data = response.json()
-        self.set_next_tipo(data, type)
-        self.loading = False
-
-    def set_next_tipo(self, holidays, type):
-        """ Establece el próximo feriado 'tipo'."""
-        now = date.today()
-        today = {
-            'day': now.day,
-            'month': now.month
-        }
-
-        holiday = next(
-            (h for h in holidays if h['tipo'] == type and h['mes'] == today['month']
-             and h['dia'] > today['day'] or h['mes'] > today['month']),
-            holidays[0]
-        )
-
-        self.loading = False
-        self.holiday = holiday
-
-
+# Instanciación y uso de la clase NextHoliday.
+print("----------------PRIMERO------------------")
 next_holiday = NextHoliday()
 next_holiday.fetch_holidays()
 next_holiday.render()
-
-# next_holiday_del_tipo = NextHoliday()
+print("-------------NOLABORABLE------------------")
+next_holiday.fetch_holidays_del_tipo('nolaborable')
+next_holiday.render()
+print("-----------------PUENTE-------------------")
 next_holiday.fetch_holidays_del_tipo('puente')
 next_holiday.render()
+print("-------------INAMOVIBLE-------------------")
+next_holiday.fetch_holidays_del_tipo('inamovible')
+next_holiday.render()
+print("---------------TRASLADABLE-----------------")
+next_holiday.fetch_holidays_del_tipo('trasladable')
+next_holiday.render()
+print("------------------------------------------")
