@@ -1,4 +1,5 @@
 import requests
+import proximo_feriado as pf
 
 # Obtener todas las películas
 response = requests.get('http://localhost:5000/peliculas')
@@ -110,5 +111,16 @@ else:
     print("Error al obtener pelicula random por genero.")
 print()
 
-
+# FIXME: La salida esta feaaa :/
+#Obtener una película aleatoria de "genero" para el proximo feriado.
+genero = "Ciencia ficción"
+response = requests.get(f'http://localhost:5000/peliculas/proximoferiado/{genero}')
+if response.status_code == 200:
+    pelicula_random = response.json()
+    print(f"Película random de {genero} para el proximo feriado:".format(genero))
+    print(f"Pelicula: {pelicula_random['pelicula']}, Proximo feriado: {pelicula_random['proximo_feriado']}")
+elif response.status_code == 404:
+    print(response.json()["mensaje"])
+else:
+    print("Error al obtener pelicula random por genero para el proximo feriado..")
 print()
