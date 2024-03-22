@@ -1,7 +1,8 @@
 {
-    "recommendations": [
-        "humao.rest-client",
-        "wayou.vscode-todo-highlight",
-        "vivaxy.vscode-conventional-commits"
-    ]
+  "recommendations": [
+    "humao.rest-client",
+    "wayou.vscode-todo-highlight",
+    "vivaxy.vscode-conventional-commits",
+    "ms-python.autopep8"
+  ]
 }
