@@ -80,7 +80,25 @@ class NextHoliday:
         self.set_next(data, tipo)
         self.loading = False
 
-    # Metodos de impresión de la información del próximo feriado.
+    # Metodos de retorno de la información del próximo feriado.
+
+    def get_holiday(self):
+        """ 
+        Devuelve la información del próximo feriado.
+        {
+            "motivo": String,
+            "tipo": String,
+            "info": String,
+            "dia": Int,
+            "mes": Int,
+            "id": String
+        }
+        """
+        if not self.loading:
+            return self.holiday
+        else:
+            print("No se ha cargado la información de los feriados.")
+            return None
 
     def render(self):
         """ Imprime la información sobre el próximo feriado. """
@@ -96,23 +114,3 @@ class NextHoliday:
             print(months[self.holiday['mes'] - 1])
             print("Tipo:")
             print(self.holiday['tipo'])
-
-
-# Instanciación y uso de la clase NextHoliday.
-print("----------------PRIMERO------------------")
-next_holiday = NextHoliday()
-next_holiday.fetch_holidays()
-next_holiday.render()
-print("-------------NOLABORABLE------------------")
-next_holiday.fetch_holidays_del_tipo('nolaborable')
-next_holiday.render()
-print("-----------------PUENTE-------------------")
-next_holiday.fetch_holidays_del_tipo('puente')
-next_holiday.render()
-print("-------------INAMOVIBLE-------------------")
-next_holiday.fetch_holidays_del_tipo('inamovible')
-next_holiday.render()
-print("---------------TRASLADABLE-----------------")
-next_holiday.fetch_holidays_del_tipo('trasladable')
-next_holiday.render()
-print("------------------------------------------")
