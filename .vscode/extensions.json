@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "humao.rest-client",
-        "wayou.vscode-todo-highlight"
+        "wayou.vscode-todo-highlight",
+        "vivaxy.vscode-conventional-commits"
     ]
 }
