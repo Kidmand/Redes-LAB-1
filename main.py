@@ -88,7 +88,7 @@ def obtener_peliculas_entitulo(texto):
     if peliculas_str:
         return jsonify(peliculas_str), 200
     else:
-        return jsonify({'mensaje': 'Texto no encontrado en ningun titulo.'}), 404
+        return jsonify({'mensaje': 'El texto "'+texto+'" no se encontro en ningun titulo.'}), 404
 
 
 def random_pelicula():
