@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import random
+import proximo_feriado as pf
 
 app = Flask(__name__)
 peliculas = [
@@ -24,6 +25,7 @@ Codigos de estado HTTP:
 - 204:
 - 404:
 """
+
 
 def obtener_peliculas():
     return jsonify(peliculas)
@@ -108,7 +110,22 @@ def pelicula_random_por_genero(genero):
         return jsonify(random.choice(peliculas_genero)), 200
     else:
         return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
-        
+
+
+def pelicula_para_feriado_del_genero(genero):
+    # Lógica para devolver/sugerir una película aleatoria según género para el proximo feriado.
+    peliculas_genero = []
+    for p in peliculas:
+        if p['genero'] == genero:
+            peliculas_genero.append(p)
+    if peliculas_genero:
+        next_holiday = pf.NextHoliday()
+        next_holiday.fetch_holidays()
+        return jsonify({
+            "pelicula": random.choice(peliculas_genero),
+            "proximo_feriado": next_holiday.get_holiday()}), 200
+    else:
+        return jsonify({'mensaje': 'No hay peliculas de ese genero.'}), 404
 
 
 def obtener_nuevo_id():
@@ -121,12 +138,12 @@ def obtener_nuevo_id():
 
 app.add_url_rule('/peliculas',
                  'obtener_peliculas',
-                 obtener_peliculas, 
+                 obtener_peliculas,
                  methods=['GET'])
 
 app.add_url_rule('/peliculas/<int:id>',
                  'obtener_pelicula',
-                 obtener_pelicula, 
+                 obtener_pelicula,
                  methods=['GET'])
 
 app.add_url_rule('/peliculas',
@@ -136,12 +153,12 @@ app.add_url_rule('/peliculas',
 
 app.add_url_rule('/peliculas/<int:id>',
                  'actualizar_pelicula',
-                 actualizar_pelicula, 
+                 actualizar_pelicula,
                  methods=['PUT'])
 
-app.add_url_rule('/peliculas/<int:id>', 
+app.add_url_rule('/peliculas/<int:id>',
                  'eliminar_pelicula',
-                 eliminar_pelicula, 
+                 eliminar_pelicula,
                  methods=['DELETE'])
 
 app.add_url_rule('/peliculas/genero/<string:genero>',
@@ -162,6 +179,11 @@ app.add_url_rule('/peliculas/random',
 app.add_url_rule('/peliculas/random/<string:genero>',
                  'pelicula_random_por_genero',
                  pelicula_random_por_genero,
+                 methods=['GET'])
+
+app.add_url_rule('/peliculas/proximoferiado/<string:genero>',
+                 'pelicula_para_feriado_del_genero',
+                 pelicula_para_feriado_del_genero,
                  methods=['GET'])
 
 if __name__ == '__main__':
