@@ -60,11 +60,55 @@ print()
 # Obtener todas las películas de "genero" 
 genero = "Ciencia ficción"
 response = requests.get(f'http://localhost:5000/peliculas/genero/{genero}')
-if response.status_code == 404:
-    print(response.json()["mensaje"])
-else:
+if response.status_code == 200:
     peliculas = response.json()
     print("Películas del genero {} existentes:".format(genero))
     for pelicula in peliculas:
         print(f"ID: {pelicula['id']}, Título: {pelicula['titulo']}, Género: {pelicula['genero']}")
+elif response.status_code == 404:
+    print(response.json()["mensaje"])
+else:
+    print("Error al obtener todas las peliculas de un genero.")
+print()
+
+# Obtener peliculas por contenido en el titulo
+texto_a_buscar = "The"
+response = requests.get(f'http://localhost:5000/peliculas/entitulo/{texto_a_buscar}')
+if response.status_code == 200:
+    peliculas = response.json()
+    print("Películas con ({}) en el titulo existentes:".format(texto_a_buscar))
+    for pelicula in peliculas:
+        print(f"ID: {pelicula['id']}, Título: {pelicula['titulo']}, Género: {pelicula['genero']}")
+elif response.status_code == 404:
+    print(response.json()["mensaje"])
+else:
+    print("Error al obtener peliculas por contenido en el titulo.")
+print()
+
+#Obtener una pelicular random.
+response = requests.get(f'http://localhost:5000/peliculas/random')
+if response.status_code == 200:
+    pelicula_random = response.json()
+    print("Película random:")
+    print(f"ID: {pelicula_random['id']}, Título: {pelicula_random['titulo']}, Género: {pelicula_random['genero']}")
+elif response.status_code == 404:
+    print(response.json()["mensaje"])
+else:
+    print("Error al obtener pelicula random.")
+print()
+
+#Obtener una pelicular random por genero.
+genero = "Ciencia ficción"
+response = requests.get(f'http://localhost:5000/peliculas/random/{genero}')
+if response.status_code == 200:
+    pelicula_random = response.json()
+    print("Película random por genero:")
+    print(f"ID: {pelicula_random['id']}, Título: {pelicula_random['titulo']}, Género: {pelicula_random['genero']}")
+elif response.status_code == 404:
+    print(response.json()["mensaje"])
+else:
+    print("Error al obtener pelicula random por genero.")
+print()
+
+
 print()
