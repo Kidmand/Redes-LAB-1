@@ -54,21 +54,21 @@ class NextHoliday:
 
     # Metodos de fetch de feriados.
 
-    def fetch_all_holidays(self):
+    def _fetch_all_holidays_(self):  # Este método es privado.
         response = requests.get(get_url(self.year))
         return response.json()
 
     def fetch_holidays(self):
         """ Realiza la solicitud HTTP a la API para obtener los feriados del año actual."""
         self.loading = True
-        data = self.fetch_all_holidays()
+        data = self._fetch_all_holidays_()
         self.set_next(data)
         self.loading = False
 
     def fetch_holidays_del_tipo(self, tipo):
         """ Realiza la solicitud HTTP a la API para obtener los feriados 'tipo' del año actual."""
         self.loading = True
-        data = self.fetch_all_holidays()
+        data = self._fetch_all_holidays_()
         if tipo not in tipos:
             print("Tipo de feriado inválido.")
             self.holiday = data[0]
