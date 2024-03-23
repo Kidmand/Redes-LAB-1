@@ -1,6 +1,7 @@
 import requests
 import pytest
 import requests_mock
+import proximo_feriado as pf
 
 BASE_URL_API = 'http://localhost:5000/peliculas'
 
@@ -191,4 +192,33 @@ def test_obtener_pelicula_para_feriado_del_genero():
     genero = "genero_inexistente"
     response = requests.get(BASE_URL_API + '/proximoferiado/' + genero)
     assert response.status_code == 404
-    
+
+
+# TESTS PARA proximo_feriado.py
+
+def test_obtener_proximo_feriado():
+    next_holiday = pf.NextHoliday()
+    next_holiday.fetch_holidays()
+    response = next_holiday.get_holiday()
+    assert response is not None
+    assert response['motivo'] is not None
+    assert response['tipo'] is not None
+    assert response['dia'] is not None
+    assert response['mes'] is not None
+    assert response['info'] is not None
+    assert response['id'] is not None
+
+
+def test_obtener_proximo_feriado_tipo():
+    tipos = ['inamovible', 'trasladable', 'nolaborable', 'puente']
+    next_holiday = pf.NextHoliday()
+    for tipo in tipos:
+        next_holiday.fetch_holidays_del_tipo(tipo)
+        response = next_holiday.get_holiday()
+        assert response is not None
+        assert response['motivo'] is not None
+        assert response['tipo'] is not None
+        assert response['dia'] is not None
+        assert response['mes'] is not None
+        assert response['info'] is not None
+        assert response['id'] is not None
