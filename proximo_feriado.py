@@ -34,7 +34,6 @@ class NextHoliday:
         }
 
         if tipo:
-            print("Tipo: ", tipo)
             holiday = next(
                 (h for h in holidays
                  if (h['tipo'] == tipo) and (
