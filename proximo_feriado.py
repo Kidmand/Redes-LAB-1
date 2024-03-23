@@ -41,14 +41,12 @@ class NextHoliday:
                      (h['mes'] == today['month'] and h['dia'] > today['day'])
                      or (h['mes'] > today['month'])
                  )),
-                # FIXME: Segun lo que digan los profes, cambiar esto por [].
                 holidays[0]
             )
         else:
             holiday = next(
                 (h for h in holidays
                  if (h['mes'] == today['month'] and h['dia'] > today['day']) or h['mes'] > today['month']),
-                # FIXME: Segun lo que digan los profes, cambiar esto por [].
                 holidays[0]
             )
 
@@ -73,7 +71,6 @@ class NextHoliday:
         data = self.fetch_all_holidays()
         if tipo not in tipos:
             print("Tipo de feriado inválido.")
-            # FIXME: Segun lo que digan los profes, cambiar esto por [].
             self.holiday = data[0]
             self.loading = False
             return
