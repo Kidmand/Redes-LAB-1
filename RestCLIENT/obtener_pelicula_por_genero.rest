@@ -1,5 +1,5 @@
 # Obtener una película por su id:
 
-GET http://127.0.0.1:5000/peliculas/genero/Drama
+GET http://127.0.0.1:5000/peliculas/genero/Acción
 
-## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.
+## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.s

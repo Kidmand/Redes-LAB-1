@@ -64,7 +64,7 @@ def eliminar_pelicula(id):
     # Lógica para buscar la película por su ID y eliminarla
     for p in peliculas:
         if p['id'] == id:
-            del p
+            peliculas.remove(p)
             return jsonify({'mensaje': 'Película eliminada correctamente'}), 200
     return jsonify({'mensaje': 'Película no encontrada por el ID para eliminarla.'}), 404
 

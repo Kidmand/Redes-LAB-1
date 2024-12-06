@@ -143,7 +143,7 @@ def test_obtener_peliculas_entitulo():
     texto = "The"
     response = requests.get(BASE_URL_API + '/entitulo/' + texto)
     assert response.status_code == 200
-    assert len(response.json()) == 4
+    assert len(response.json()) == 3
 
     texto_con_espacios = "The Dark"
     response = requests.get(BASE_URL_API + '/entitulo/' + texto_con_espacios)

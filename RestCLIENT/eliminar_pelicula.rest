@@ -1,5 +1,5 @@
 # Eliminar una pelicula:
 
-DELETE http://127.0.0.1:5000/peliculas/1
+DELETE http://127.0.0.1:5000/peliculas/13
 
 ## Recorda tener el server en linea con "python3 main.py" para poder hacer las pruebas.
